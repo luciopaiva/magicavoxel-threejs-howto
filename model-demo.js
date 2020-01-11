@@ -7,6 +7,9 @@ import {OrbitControls} from "./node_modules/three/examples/jsm/controls/OrbitCon
 export default class ModelDemo {
 
     constructor (canvasId, modelName = canvasId, wireframeMode = false) {
+        this.modelName = modelName;
+        this.wireframeMode = wireframeMode;
+
         this.canvas = document.getElementById(canvasId);
         this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight, false);
@@ -19,19 +22,19 @@ export default class ModelDemo {
 
         // this.createPlane();
         this.createLights();
+    }
 
-        // ToDo break this into two steps:
-        //      - load obj and mtl
-        //      - create scene object
-        // ToDo once the above is done, create one regular object and another in wireframe mode
-        new Model(this.scene, modelName, wireframeMode);
+    async loadModel() {
+        this.model = await Model.load(this.modelName, this.wireframeMode);
+        this.scene.add(this.model);
+    }
 
-        // this.render();
-        // window.addEventListener("resize", () => this.render());
+    start() {
         requestAnimationFrame(this.render.bind(this));
     }
 
     render() {
+        this.controls.update();
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(this.render.bind(this));
     }
@@ -42,15 +45,26 @@ export default class ModelDemo {
         const near = 0.1;
         const far = 100;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-        this.camera.position.set(-0.3, 2.5, 0.5);
+        this.setCameraPosition(0, 10, 20);
+    }
+
+    setCameraPosition(x, y, z) {
+        this.camera.position.set(x, y, z);
         this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
         this.camera.updateProjectionMatrix();
     }
 
+    setCameraZoom(zoom) {
+        this.camera.zoom = zoom;
+        this.camera.updateProjectionMatrix();
+    }
+
     createControls() {
-        const controls = new OrbitControls(this.camera, this.canvas);
-        controls.target.set(0, 2, 0);
-        controls.update();
+        this.controls = new OrbitControls(this.camera, this.canvas);
+        this.controls.autoRotate = true;
+        this.controls.enablePan = false;
+        this.controls.enableZoom = false;
+        this.controls.target.set(0, 0, 0);
     }
 
     createPlane() {
@@ -91,5 +105,12 @@ export default class ModelDemo {
         directionalLight.target.position.set(-5, 0, 0);
         this.scene.add(directionalLight);
         this.scene.add(directionalLight.target);
+    }
+
+    static async load(canvasId, modelName = canvasId, wireframeMode = false) {
+        const demo = new ModelDemo(canvasId, modelName, wireframeMode);
+        await demo.loadModel();
+        demo.start();
+        return demo;
     }
 }

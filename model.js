@@ -6,27 +6,51 @@ import {MtlObjBridge} from './node_modules/three/examples/jsm/loaders/obj2/bridg
 
 export default class Model {
 
-    constructor (scene, fileName, wireframeMode = false) {
-        const objLoader = new OBJLoader2();
+    constructor (fileName, wireframeMode = false) {
+        this.fileName = fileName;
+        this.wireframeMode = wireframeMode;
+        this.materials = null;
+        this.root = null;
+    }
 
-        const mtlLoader = new MTLLoader();
-        mtlLoader.load(`models/${fileName}.mtl`, (mtlParseResult) => {
-            const materials =  MtlObjBridge.addMaterialsFromMtlLoader(mtlParseResult);
-            objLoader.addMaterials(materials);
-            objLoader.load(`models/${fileName}.obj`, (root) => {
-
-                if (wireframeMode) {
-                    for (const child of root.children) {
-                        child.material.wireframe = true;
-                        child.material.color = new THREE.Color(0xff0000);
-                    }
-                }
-
-                scene.add(root);
-                root.position.x = 0;
-                root.position.y = 0;
-                root.position.z = 0;
+    async loadMaterial() {
+        return new Promise(resolve => {
+            const mtlLoader = new MTLLoader();
+            mtlLoader.load(`models/${this.fileName}.mtl`, mtlParseResult => {
+                this.materials = MtlObjBridge.addMaterialsFromMtlLoader(mtlParseResult);
+                resolve();
             });
         });
+    }
+
+    async loadObject() {
+        return new Promise(resolve => {
+            const objLoader = new OBJLoader2();
+            objLoader.addMaterials(this.materials, true);
+            objLoader.load(`models/${this.fileName}.obj`, root => {
+
+                if (this.wireframeMode) {
+                    this.toggleWireframeModeOn(root);
+                }
+
+                this.root = root;
+
+                resolve();
+            });
+        });
+    }
+
+    toggleWireframeModeOn(root) {
+        for (const child of root.children) {
+            child.material.wireframe = true;
+            child.material.color = new THREE.Color(0xff0000);
+        }
+    }
+
+    static async load(fileName, wireframeMode = false) {
+        const model = new Model(fileName, wireframeMode);
+        await model.loadMaterial();
+        await model.loadObject();
+        return model.root;
     }
 }
