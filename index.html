@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js vox file experiment</title>
+
+    <link rel="stylesheet" href="index.css">
+
+    <script src="index.js" type="module" defer></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Loading MagicaVoxel models in Three.js</h1>
+    <div class="author-and-date">
+        <p class="author">by <a href="https://luciopaiva.com">Lucio Paiva</a></p>
+        <p class="date">2020-01-10</p>
+    </div>
+
+    <canvas id="cyclist-cover"></canvas>
+
+    <p class="caption">This is an example of what we'll have by the end of this article</p>
+
+    <p class="quote">TL;DR: The best way to have MagicaVoxel models loaded into a Three.js scene is to export .obj files. There is currently no reliable library of loading .vox files (the default format used by the program), but exporting .obj files is really easy. And don't worry about your voxel palette and materials, as both are also exported by MagicaVoxel.</p>
+
+    <p>My goal here is to learn (and share the knowledge of) how to load MagicaVoxel models into a Three.js scene. I want it to be efficient (i.e., I don't want lots of cubes) and I'd like to be able to see all the materials correctly displayed as well.</p>
+
+    <p>For some strange reason (at least for my present me), I first decided I should try directly loading .vox files in Three.js. I googled for an existing library to do that because I didn't want to spend time figuring out how to parse this model into a good mesh right now. The only hit I could find was
+        <a href="https://github.com/daishihmr/vox.js/">this library</a>, but it's been about an year and a half since it was last updated and I tried and it didn't work anyway. The library just threw an exception when I tried the sample code in the readme.</p>
+
+    <p>It then occurred to me: why not just export a .obj file? It's a ludicrously well-known file format that's been around for ages. One of the things I was afraid was that MagicaVoxel was going to export several individual cubes; that would be really bad for performance (lots of unnecessary triangles would need to be rendered). Thankfully, you will see that's not the case. MagicaVoxel merges voxels of a same object into a single mesh. My second fear was that I was going to have a hard time trying to load all the materials correctly; also wrong!</p>
+
+    <p>My plan here is first to show that exported meshes are good and efficient and then demonstrate how materials can be easily loaded. Follow me.</p>
+
+    <h2>A simple, vanilla cube</h2>
+
+    <p>Let's start with a 2x2x2 cube (.vox model <a href="models/2x2x2.vox">here</a>). This is how it looks in MagicaVoxel:</p>
+
+    <img src="assets/2x2x2.png" alt="2x2x2 model">
+
+    <p>And this is how it looks after being exported to .obj and rendered in Three.js:</p>
+
+    <p class="todo">Make it rotate by itself</p>
+
+    <canvas id="2x2x2"></canvas>
+
+    <p>Rotate it a bit to understand how voxels were merged. Every face of the 2x2x2 cube turned into a pair of triangles, proving MagicaVoxel did a good job exporting voxels into a single, efficient mesh. But how will it look if the model gets more complex?</p>
+
+    <h2>Cube with an eroded corner</h2>
+
+    <p>Now let's make the model a bit more complex by removing one of the voxels of the cube:</p>
+
+    <canvas id="2x2x2-1-voxel-removed"></canvas>
+
+    <p>Notice that the object still is a single mesh, although now there are more triangles. Notice, however, that the triangle count is as low as possible for this object. Rotate it and try to come up with a better solution (i.e., with less triangles) for the L-shaped faces; if you do, please don't forget to write a paper about it 🙂.</p>
+
+    <h2>Code to load .obj files</h2>
+
+    <p>There are countless examples of how to do it in Three.js. I just chose one and changed it to make it cleaner and easier to read. You can check the source code of this page for the complete example of how to do it, but the core snippet is this:</p>
+
+    <div class="code">
+        <script src="https://gist.github.com/luciopaiva/d22cd1c86a4469813cbe2bf2e2ade9ac.js?file=threejs-vox-model.js"></script>
+    </div>
+
+    <h2>Materials</h2>
+
+    <p>You may have noticed that exporting a .obj file in MagicaVoxel also generates a .mtl and a .png file. The .mtl file contains instructions about the materials used in the model and to which faces they should be applied and the .png is nothing more than the very palette used by you when making your model in MagicaVoxel. It's a 256x1 image where each pixel maps to a color in the palette. The .mtl file references the .png one to obtain the colors used by each material. Here's a sample .png palette image:</p>
+
+    <img src="models/2x2x2.png" alt="">
+
+    <p>Our plan now is to use those two extra files for properly loading the materials for our model. For this next test, I am going to modify the 2x2x2 cube and add different colors to the voxels. This is what we have in MagicaVoxel now:</p>
+
+    <img src="assets/2x2x2-colors.png" alt="2x2x2 cube with colors">
+
+    <p>The code change is rela</p>
+
+    <p>Exporting to .obj and loading it in Three.js, this is what we get:</p>
+
+    <canvas id="2x2x2-colors"></canvas>
+
+    <p>There's a hidden change now, though. To see it, we need to enter wireframe mode:</p>
+
+    <canvas id="2x2x2-colors-wireframe"></canvas>
+
+    <p>Voxels are no longer merged! Due to each voxel having a different color, MagicaVoxel was not able to simplify the mesh. It needs to keep them separated so it can apply a different color to each individual voxel face. One way to fix this would be to bake a texture image for each individual cube face. We'd be trading triangles for texture memory and also making the whole exporting process considerably more complex. I wouldn't go down that path unless really necessary.</p>
+
+    <p>So that's it. We saw that MagicaVoxel does its best effort to optimize the exported mesh, but do not expect a low triangle count for objects with complex geometries and abundant use of palette colors.</p>
+
+    <h2>A more complex object</h2>
+
+    <p>To wrap up this article, I want to load a more complex object. Here is a MagicaVoxel project I recently did:</p>
+
+    <img src="assets/big-z-scene.png" alt="Big Z">
+
+    <p class="caption">Check out <a href="https://www.deviantart.com/luciopaiva/art/Serious-training-made-with-voxels-825225417">this link</a> for a better resolution.</p>
+
+    <p>Exporting the cyclist I used in that scene and loading it in Three.js:</p>
+
+    <canvas id="cyclist"></canvas>
+
+    <h2>Extra: notes about the exported .obj file</h2>
+
+    <p>One minor thing I noticed is that, despite the 2x2x2 single-colored cube having the minimum number of triangles possible (12), its exported .obj file does not have the minimum number of vertices possible. There is a total of 24 vertices for that model when there could be only 8. MagicaVoxel exported each vertex of the cube three times - one for each face that vertex is part of. Not sure how does that impact performance, but I tend to believe it doesn't matter that much.</p>
+
+    <p>One curious thing about .obj files exported by MagicaVoxel is that it always contain a same exact set of normals defined: 6. Since the scene is only made of voxels and you can't rotate them in any way, it turns out the 6 normals of the identity cube are the only normals that can ever be used in a MagicaVoxel scene.</p>
+
+    <h2>References</h2>
+
+    <ul>
+        <li>Good reference on how to load .obj files <a href="https://threejsfundamentals.org/threejs/lessons/threejs-load-obj.html">here</a>;</li>
+        <li><a href="https://stackoverflow.com/questions/24379720/threejs-wireframe-with-the-object-materials">StackOverflow question</a> on how to show wireframes for OBJ meshes.</li>
+    </ul>
+</div>
+
+<div class="footer">
+    <a href="https://luciopaiva.com">luciopaiva.com</a>
+</div>
+
+</body>
+</html>

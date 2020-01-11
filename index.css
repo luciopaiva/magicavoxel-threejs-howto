@@ -1,0 +1,91 @@
+
+@font-face {
+    src: url("assets/Gelasio-Regular.ttf");
+    font-family: "Gelasio";
+}
+
+:root {
+    --page-width: 800px;
+    --background-color: #444444;
+    --text-color: #eaeaea;
+    --caption-color: #b1b1b1;
+    --link-color: #63c3b7;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Gelasio, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 19px;
+}
+
+a, a:hover, a:active, a:visited {
+    color: var(--link-color);
+}
+
+h1, h2, p, canvas, img, .code {
+    margin: 2em 0 0 0;
+}
+
+canvas, img {
+    width: 100%;
+    display: block;
+}
+
+p {
+    line-height: 1.58;
+    text-align: justify;
+}
+
+.author-and-date {
+    margin: 1em 0 0 0;
+}
+
+p.author, p.date {
+    /*line-height: 1;*/
+    margin: 0;
+    font-size: 90%;
+}
+
+p.quote {
+    background-color: #333333;
+    border-left: 10px solid #888888;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+p.caption {
+    margin: 5px 0 0 0;
+    width: 100%;
+    font-size: 90%;
+    color: var(--caption-color);
+    /*font-style: italic;*/
+    text-align: center;
+}
+
+p.todo {
+    color: red;
+    text-transform: capitalize;
+    background-color: #222;
+    padding: 10px;
+}
+
+.container {
+    margin: 0 auto;
+    width: var(--page-width);
+}
+
+.footer {
+    width: 100%;
+    background-color: black;
+    padding: 40px;
+    margin: 40px 0 0 0;
+    text-align: center;
+}
