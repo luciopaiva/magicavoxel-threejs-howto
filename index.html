@@ -131,6 +131,15 @@
 
     <p>That's it for this exploratory article. Feel free to check the source code <a href="https://github.com/luciopaiva/magicavoxel-threejs-howto">here</a> and use it as you please. The cyclist character model, on the other hand, is copyrighted. Please contact me first if you'd like to use it.</p>
 
+    <h2>Bonus: putting off-screen canvases in stand-by</h2>
+
+    <p>This is the first Three.js tutorial I write and one thing I noticed is that having several renderers working on the same page can put considerable stress on the CPU. To prevent the page from unnecessarily using too much CPU, I devised a check to only update the scene if the canvas can be seen by the reader. Here's the relevant logic, which you can see in the
+        <a href="https://github.com/luciopaiva/magicavoxel-threejs-howto">source code</a> as well:</p>
+
+    <div class="code">
+        <script src="https://gist.github.com/luciopaiva/d22cd1c86a4469813cbe2bf2e2ade9ac.js?file=offscreen-canvas-check.js"></script>
+    </div>
+
     <h2>Reference</h2>
 
     <p>Aside from various Stack Overflow questions, I also used this excellent reference on how to load .obj files <a href="https://threejsfundamentals.org/threejs/lessons/threejs-load-obj.html">here</a>.</p>
