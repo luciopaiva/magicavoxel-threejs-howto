@@ -35,8 +35,18 @@ export default class ModelDemo {
 
     render() {
         this.controls.update();
-        this.renderer.render(this.scene, this.camera);
+        // avoid unnecessarily burdening the CPU if the canvas is not visible due to page scrolling
+        if (this.isCanvasVisible()) {
+            this.renderer.render(this.scene, this.camera);
+        }
         requestAnimationFrame(this.render.bind(this));
+    }
+
+    isCanvasVisible() {
+        const rect = this.canvas.getBoundingClientRect();
+        const top = rect.y;
+        const bottom = top + rect.height;
+        return (top > 0 && top < window.innerHeight) || (bottom > 0 && bottom < window.innerHeight);
     }
 
     createCamera() {
