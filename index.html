@@ -123,13 +123,13 @@
 
     <p>Focus the canvas element above and hit the <i>i</i> key to dump renderer stats in your browser's dev console. In the stats you'll see that it has around 1600 triangles loaded.</p>
 
+    <p>And that's it for this exploratory article. Feel free to check the source code <a href="https://github.com/luciopaiva/magicavoxel-threejs-howto">here</a> and use it as you please. The cyclist character model, on the other hand, is copyrighted. Please contact me first if you'd like to use it.</p>
+
     <h2>Extra: notes about the exported .obj file</h2>
 
     <p>One minor thing I noticed is that, despite the 2x2x2 single-colored cube having the minimum number of triangles possible (12), its exported .obj file does not have the minimum number of <i>vertices</i> possible. There is a total of 24 vertices for that model when there could be only 8. MagicaVoxel exported each vertex of the cube three times - one for each face that vertex is part of. Not sure how does that impact performance, but I tend to believe it doesn't matter that much.</p>
 
     <p>One curious thing about .obj files exported by MagicaVoxel is that it always contain a same exact set of normals defined: 6. Since the scene is only made of voxels orientated parallel to the coordinate axes and you can't rotate them in any way, it turns out the 6 normals of the identity cube are the only normals that can ever be used in a MagicaVoxel scene.</p>
-
-    <p>That's it for this exploratory article. Feel free to check the source code <a href="https://github.com/luciopaiva/magicavoxel-threejs-howto">here</a> and use it as you please. The cyclist character model, on the other hand, is copyrighted. Please contact me first if you'd like to use it.</p>
 
     <h2>Bonus: putting off-screen canvases in stand-by</h2>
 
