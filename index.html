@@ -50,7 +50,7 @@
 
     <p>My goal here is to learn (and share the knowledge of) how to load MagicaVoxel models into a Three.js scene. I want it to be efficient (i.e., I don't want lots of cubes with hidden faces) and I'd like to be able to see all the materials correctly displayed as well.</p>
 
-    <p>For some strange reason (at least for my present me), I first decided I should try directly loading .vox files in Three.js. I googled for an existing library to do that because I didn't want to spend time figuring out how to parse models into meshes right now. The only hit I could find was
+    <p>For some strange reason (at least for my present self), I first decided I should try directly loading .vox files in Three.js. I googled for an existing library to do that because I didn't want to spend time figuring out how to parse models into meshes right now. The only hit I could find was
         <a href="https://github.com/daishihmr/vox.js/">this library</a>, but it's been about an year and a half since it was last updated. Nevertheless, I decided to try it, but it didn't work. The library just threw an exception when I tried the sample code in the readme.</p>
 
     <p>It then occurred to me: why not just export a .obj file? It's a ludicrously well-known file format that's been around for ages. One of the things I was afraid was that MagicaVoxel was going to export several individual cubes; that would be really bad for performance (lots of unnecessary triangles would need to be rendered). Thankfully, you will see that's not the case. MagicaVoxel merges voxels of a same object into a single mesh. My second fear was that I was going to have a hard time trying to load all the materials correctly; also wrong!</p>
