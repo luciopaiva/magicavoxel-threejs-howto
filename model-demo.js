@@ -18,9 +18,8 @@ export default class ModelDemo {
         this.createControls();
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color("white");
+        this.scene.background = new THREE.Color("#ccc");
 
-        // this.createPlane();
         this.createLights();
     }
 
@@ -81,7 +80,7 @@ export default class ModelDemo {
         const planeSize = 40;
 
         const loader = new THREE.TextureLoader();
-        const texture = loader.load("img/checker.png");
+        const texture = loader.load("assets/checker.png");
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.magFilter = THREE.NearestFilter;
@@ -96,8 +95,9 @@ export default class ModelDemo {
         const mesh = new THREE.Mesh(planeGeo, planeMat);
         mesh.rotation.x = Math.PI * -.5;
         mesh.position.x = 0;
-        mesh.position.y = 2;
+        mesh.position.y = 0;
         mesh.position.z = 0;
+        mesh.receiveShadow = true;
         this.scene.add(mesh);
     }
 
@@ -110,11 +110,10 @@ export default class ModelDemo {
         this.scene.add(hemisphereLight);
 
         const color = 0xFFFFFF;
-        const directionalLight = new THREE.DirectionalLight(color, intensity);
-        directionalLight.position.set(0, 10, 0);
-        directionalLight.target.position.set(-5, 0, 0);
-        this.scene.add(directionalLight);
-        this.scene.add(directionalLight.target);
+        this.directionalLight = new THREE.DirectionalLight(color, intensity);
+        this.directionalLight.position.set(10, 10, 10);
+        this.directionalLight.target.position.set(0, 0, 0);
+        this.scene.add(this.directionalLight);
     }
 
     static async load(canvasId, modelName = canvasId, wireframeMode = false) {

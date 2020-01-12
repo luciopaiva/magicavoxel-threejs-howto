@@ -26,6 +26,7 @@ class App {
     setupCyclist(demo) {
         demo.controls.target.set(0, 1.2, 0);
         demo.setCameraZoom(6);
+        demo.createPlane();
     }
 }
 
