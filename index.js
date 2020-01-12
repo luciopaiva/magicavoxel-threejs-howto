@@ -19,13 +19,11 @@ class App {
     }
 
     setupCube(demo) {
-        demo.model.position.set(0, 0, 0);
         demo.controls.target.set(0.1, 2.1, -0.1);
         demo.setCameraZoom(50);
     }
 
     setupCyclist(demo) {
-        demo.model.position.set(0, 0, 0);
         demo.controls.target.set(0, 1.2, 0);
         demo.setCameraZoom(6);
     }
