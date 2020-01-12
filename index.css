@@ -39,7 +39,7 @@ canvas, img {
     display: block;
 }
 
-p {
+p, li {
     line-height: 1.58;
     text-align: justify;
 }
@@ -70,6 +70,13 @@ p.caption {
     text-align: center;
 }
 
+p.footer {
+    line-height: 1;
+    text-align: left;
+    font-size: 80%;
+    margin: 0.5em 0 0 0;
+}
+
 p.todo {
     color: red;
     text-transform: capitalize;
@@ -82,7 +89,7 @@ p.todo {
     width: var(--page-width);
 }
 
-.footer {
+div.footer {
     width: 100%;
     background-color: black;
     padding: 40px;

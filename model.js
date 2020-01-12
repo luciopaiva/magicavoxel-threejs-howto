@@ -40,6 +40,7 @@ export default class Model {
         });
     }
 
+    // https://stackoverflow.com/questions/24379720/threejs-wireframe-with-the-object-materials
     toggleWireframeModeOn(root) {
         for (const child of root.children) {
             child.material.wireframe = true;

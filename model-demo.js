@@ -21,6 +21,12 @@ export default class ModelDemo {
         this.scene.background = new THREE.Color("#ccc");
 
         this.createLights();
+
+        this.canvas.addEventListener("keypress", event => {
+            if (event.key === "i") {
+                console.info(this.renderer.info);
+            }
+        });
     }
 
     async loadModel() {
