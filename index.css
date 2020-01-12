@@ -44,6 +44,18 @@ p, li {
     text-align: justify;
 }
 
+kbd {
+    display: inline-block;
+    font-size: 70%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0px 6px;
+    margin: 0 0.2em;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+    background-color: #f7f7f7;
+    color: #252525;
+}
+
 .author-and-date {
     margin: 1em 0 0 0;
 }
