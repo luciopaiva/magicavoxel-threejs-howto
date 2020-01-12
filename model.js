@@ -29,11 +29,11 @@ export default class Model {
             objLoader.addMaterials(this.materials, true);
             objLoader.load(`models/${this.fileName}.obj`, root => {
 
-                if (this.wireframeMode) {
-                    this.toggleWireframeModeOn(root);
-                }
-
                 this.root = root;
+
+                if (this.wireframeMode) {
+                    this.toggleWireframeMode(true);
+                }
 
                 resolve();
             });
@@ -41,17 +41,26 @@ export default class Model {
     }
 
     // https://stackoverflow.com/questions/24379720/threejs-wireframe-with-the-object-materials
-    toggleWireframeModeOn(root) {
-        for (const child of root.children) {
-            child.material.wireframe = true;
-            child.material.color = new THREE.Color(0xff0000);
+    toggleWireframeMode(force) {
+        if (typeof force === "boolean") {
+            this.wireframeMode = force;
+        } else {
+            this.wireframeMode = !this.wireframeMode;
         }
+
+        for (const child of this.root.children) {
+            child.material.wireframe = this.wireframeMode;
+        }
+    }
+
+    getObject() {
+        return this.root;
     }
 
     static async load(fileName, wireframeMode = false) {
         const model = new Model(fileName, wireframeMode);
         await model.loadMaterial();
         await model.loadObject();
-        return model.root;
+        return model;
     }
 }

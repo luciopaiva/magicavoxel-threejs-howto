@@ -23,15 +23,20 @@ export default class ModelDemo {
         this.createLights();
 
         this.canvas.addEventListener("keypress", event => {
-            if (event.key === "i") {
-                console.info(this.renderer.info);
+            switch (event.key) {
+                case "i":
+                    console.info(this.renderer.info);
+                    break;
+                case "w":
+                    this.model.toggleWireframeMode();
+                    break;
             }
         });
     }
 
     async loadModel() {
         this.model = await Model.load(this.modelName, this.wireframeMode);
-        this.scene.add(this.model);
+        this.scene.add(this.model.getObject());
     }
 
     start() {
